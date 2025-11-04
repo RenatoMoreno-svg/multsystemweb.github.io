@@ -1,7 +1,7 @@
 
-  # MultSystem (Copy)
+  # MultSystem
 
-  This is a code bundle for MultSystem (Copy). The original project is available at https://www.figma.com/design/30K5q2QPHtuYtqobilXhZB/MultSystem--Copy-.
+  This is a code bundle for MultSystem. The original project is available at https://www.figma.com/design/30K5q2QPHtuYtqobilXhZB/MultSystem.
 
   ## Running the code
 

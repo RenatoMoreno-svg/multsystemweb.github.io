@@ -12,11 +12,13 @@ import { ContactInfo } from "./components/ContactInfo";
 import { MultSystemFooter } from "./components/MultSystemFooter";
 import { WhatsAppButton } from "./components/WhatsAppButton";
 import { BackToTop } from "./components/BackToTop";
+import { Toaster } from "./components/ui/sonner";
 
 export default function App() {
   return (
     <div className="min-h-screen bg-white">
       <MultSystemHeader />
+      <Toaster position="top-center" richColors />
       
       <main id="main-content" className="relative overflow-x-hidden">
         <ImprovedMultSystemHero />

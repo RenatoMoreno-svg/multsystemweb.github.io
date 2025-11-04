@@ -13,7 +13,7 @@ export function WhatsAppButton() {
 
   return (
     <button
-      className="fixed bottom-20 right-6 sm:bottom-20 sm:right-6 z-[9999] group"
+      className="fixed bottom-20 right-6 sm:bottom-20 sm:right-6 z-50 group"
       style={{ pointerEvents: 'auto' }}
       onClick={handleClick}
       onMouseEnter={() => setIsHovered(true)}

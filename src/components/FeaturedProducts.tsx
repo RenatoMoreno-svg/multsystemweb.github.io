@@ -11,9 +11,11 @@ import { useState } from "react";
 import { FEATURED_PRODUCTS } from "../constants/products";
 import { SOCIAL_LINKS } from "../constants/navigation";
 import { ProductCard } from "./ProductCard";
+import { useReducedMotion } from "../hooks/useReducedMotion";
 
 export function FeaturedProducts() {
   const [hoveredProduct, setHoveredProduct] = useState<number | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleBuyClick = () => {
     window.open(SOCIAL_LINKS.mercadoLivre, "_blank");
@@ -46,18 +48,18 @@ export function FeaturedProducts() {
             {/* Badge with Pulse Animation - Espaçamento 0 → 24px */}
             <motion.div 
               className="inline-flex items-center gap-3 px-5 py-2.5 bg-gradient-to-r from-[#FF8C42] to-[#FF6B35] rounded-full mb-6 shadow-lg relative overflow-hidden"
-              animate={{
+              animate={!shouldReduceMotion ? {
                 boxShadow: [
                   "0 4px 20px rgba(255, 140, 66, 0.3)",
                   "0 8px 30px rgba(255, 140, 66, 0.5)",
                   "0 4px 20px rgba(255, 140, 66, 0.3)",
                 ]
-              }}
+              } : {}}
               transition={{ duration: 2, repeat: Infinity }}
             >
               <motion.span 
                 className="text-xl"
-                animate={{ rotate: [0, 10, -10, 0] }}
+                animate={!shouldReduceMotion ? { rotate: [0, 10, -10, 0] } : {}}
                 transition={{ duration: 2, repeat: Infinity }}
               >
                 🔥
@@ -65,11 +67,13 @@ export function FeaturedProducts() {
               <span className="text-white font-semibold text-xs tracking-[0.1em] uppercase">Ofertas Especiais</span>
               
               {/* Shine effect */}
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                animate={{ x: ["-200%", "200%"] }}
-                transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
-              />
+              {!shouldReduceMotion && (
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                  animate={{ x: ["-200%", "200%"] }}
+                  transition={{ duration: 3, repeat: Infinity, repeatDelay: 2 }}
+                />
+              )}
             </motion.div>
 
             {/* Title - Espaçamento 24px → 16px */}
@@ -136,8 +140,8 @@ export function FeaturedProducts() {
                 {FEATURED_PRODUCTS.map((product, index) => (
                   <CarouselItem key={product.id} className="pl-3 md:pl-4 lg:pl-6 basis-full sm:basis-1/2 lg:basis-1/3">
                     <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
+                      initial={!shouldReduceMotion ? { opacity: 0, y: 20 } : {}}
+                      whileInView={!shouldReduceMotion ? { opacity: 1, y: 0 } : {}}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       className="h-full"

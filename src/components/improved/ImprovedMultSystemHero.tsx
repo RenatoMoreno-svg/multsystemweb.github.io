@@ -2,11 +2,13 @@ import { Button } from "../ui/button";
 import { ImageWithFallback } from "../figma/ImageWithFallback";
 import { ShoppingBag, Package, Star, TrendingUp, Zap, ArrowRight } from "lucide-react";
 import { motion, useScroll, useTransform } from "motion/react";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 
 export function ImprovedMultSystemHero() {
+  const shouldReduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 500], [0, 150]);
-  const opacity = useTransform(scrollY, [0, 300], [1, 0]);
+  const y = useTransform(scrollY, [0, 500], [0, shouldReduceMotion ? 0 : 150]);
+  const opacity = useTransform(scrollY, [0, 300], [1, shouldReduceMotion ? 1 : 0]);
 
   const handleMercadoLivreClick = () => {
     window.open("https://www.mercadolivre.com.br", "_blank");
@@ -28,7 +30,8 @@ export function ImprovedMultSystemHero() {
       <motion.div style={{ y }} className="absolute inset-0 opacity-10">
         <ImageWithFallback
           src="https://images.unsplash.com/photo-1640552421447-1808735878e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNobm9sb2d5JTIwY2lyY3VpdCUyMGJvYXJkfGVufDF8fHx8MTc2MjAwNjU4NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-          alt="Circuit Board Background"
+          alt=""
+          loading="lazy"
           className="w-full h-full object-cover"
         />
       </motion.div>
@@ -40,31 +43,35 @@ export function ImprovedMultSystemHero() {
       ></motion.div>
 
       {/* Animated Circles */}
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.1, 0.15, 0.1],
-        }}
-        transition={{
-          duration: 8,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        className="absolute top-20 right-20 w-80 h-80 bg-[#0A84FF]/10 rounded-full blur-3xl"
-      ></motion.div>
-      <motion.div
-        animate={{
-          scale: [1, 1.3, 1],
-          opacity: [0.1, 0.2, 0.1],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-          delay: 1,
-        }}
-        className="absolute bottom-20 left-20 w-96 h-96 bg-[#4FC3F7]/10 rounded-full blur-3xl"
-      ></motion.div>
+      {!shouldReduceMotion && (
+        <>
+          <motion.div
+            animate={{
+              scale: [1, 1.2, 1],
+              opacity: [0.1, 0.15, 0.1],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute top-20 right-20 w-80 h-80 bg-[#0A84FF]/10 rounded-full blur-3xl"
+          ></motion.div>
+          <motion.div
+            animate={{
+              scale: [1, 1.3, 1],
+              opacity: [0.1, 0.2, 0.1],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+            className="absolute bottom-20 left-20 w-96 h-96 bg-[#4FC3F7]/10 rounded-full blur-3xl"
+          ></motion.div>
+        </>
+      )}
 
       {/* Content */}
       <div className="container-custom relative z-10">

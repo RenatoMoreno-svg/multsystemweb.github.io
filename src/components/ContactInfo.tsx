@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { SectionHeader } from "./SectionHeader";
 import { Phone, Mail, MapPin, Clock, MessageCircle, Send, Zap, Sparkles, ExternalLink } from "lucide-react";
 import { Button } from "./ui/button";
+import { useReducedMotion } from "../hooks/useReducedMotion";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +14,7 @@ import {
 
 export function ContactInfo() {
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleWhatsAppClick = () => {
     window.open("https://wa.me/5511999999999", "_blank");
@@ -97,8 +99,12 @@ export function ContactInfo() {
       <div className="absolute inset-0 gradient-mesh opacity-60"></div>
       
       {/* Floating orbs */}
-      <div className="absolute top-40 -left-20 w-96 h-96 bg-gradient-to-br from-[#667eea]/20 to-[#764ba2]/20 rounded-full blur-3xl animate-float"></div>
-      <div className="absolute bottom-20 -right-20 w-96 h-96 bg-gradient-to-br from-[#f093fb]/20 to-[#f5576c]/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "1.5s" }}></div>
+      {!shouldReduceMotion && (
+        <>
+          <div className="absolute top-40 -left-20 w-96 h-96 bg-gradient-to-br from-[#667eea]/20 to-[#764ba2]/20 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 -right-20 w-96 h-96 bg-gradient-to-br from-[#f093fb]/20 to-[#f5576c]/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "1.5s" }}></div>
+        </>
+      )}
 
       <div className="container mx-auto px-4 relative z-10">
         <SectionHeader

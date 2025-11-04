@@ -18,12 +18,16 @@ import { useState } from "react";
 import logoImage from "figma:asset/762bda0b261ea86f64595536f752ddd79544f7a8.png";
 import { LegalModal } from "./LegalModal";
 import { LEGAL_CONTENT } from "../constants/legal";
+import { toast } from "sonner@2.0.3";
+import { useReducedMotion } from "../hooks/useReducedMotion";
 
 type LegalType = "privacy" | "terms" | "returns" | null;
 
 export function MultSystemFooter() {
   const [email, setEmail] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [openLegal, setOpenLegal] = useState<LegalType>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   const handleMercadoLivreClick = () => {
     window.open("https://www.mercadolivre.com.br", "_blank");
@@ -33,10 +37,29 @@ export function MultSystemFooter() {
     window.open("https://wa.me/5511999999999", "_blank");
   };
 
-  const handleNewsletterSubmit = (e: React.FormEvent) => {
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert("Obrigado por se inscrever!");
-    setEmail("");
+    
+    // Validação de email
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.trim()) {
+      toast.error("Por favor, insira seu e-mail");
+      return;
+    }
+    
+    if (!emailRegex.test(email)) {
+      toast.error("Por favor, insira um e-mail válido");
+      return;
+    }
+
+    setIsSubmitting(true);
+    
+    // Simulação de envio (substituir por API real)
+    setTimeout(() => {
+      toast.success("Obrigado! Você receberá nossas novidades em breve. 🎉");
+      setEmail("");
+      setIsSubmitting(false);
+    }, 1000);
   };
 
   const scrollToSection = (sectionId: string) => {
@@ -107,10 +130,13 @@ export function MultSystemFooter() {
         ></div>
       </div>
 
-      {/* Animated gradient orbs */}
-      <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-[#667eea]/20 to-[#764ba2]/20 rounded-full blur-3xl animate-float"></div>
-      <div className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-br from-[#f093fb]/20 to-[#f5576c]/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }}></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-br from-[#4facfe]/10 to-[#00f2fe]/10 rounded-full blur-3xl animate-float" style={{ animationDelay: "4s" }}></div>
+      {/* Animated gradient orbs - Reduzido para melhor performance */}
+      {!shouldReduceMotion && (
+        <>
+          <div className="absolute top-20 right-20 w-96 h-96 bg-gradient-to-br from-[#667eea]/20 to-[#764ba2]/20 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-20 left-20 w-96 h-96 bg-gradient-to-br from-[#f093fb]/20 to-[#f5576c]/20 rounded-full blur-3xl animate-float" style={{ animationDelay: "2s" }}></div>
+        </>
+      )}
 
       <div className="container mx-auto px-4 relative z-10">
         {/* Main Mercado Livre CTA */}
@@ -211,9 +237,10 @@ export function MultSystemFooter() {
                   />
                   <Button
                     type="submit"
-                    className="bg-gradient-to-r from-[#FF8C42] to-[#ff7a2e] hover:opacity-90 border-0 px-8 h-12 shadow-lg hover:shadow-xl transition-all rounded-xl"
+                    disabled={isSubmitting}
+                    className="bg-gradient-to-r from-[#FF8C42] to-[#ff7a2e] hover:opacity-90 border-0 px-8 h-12 shadow-lg hover:shadow-xl transition-all rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    OK
+                    {isSubmitting ? "..." : "OK"}
                   </Button>
                 </form>
               </div>

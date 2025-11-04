@@ -9,6 +9,7 @@ import { createWhatsAppLink } from "../utils/formatters";
 export function MultSystemHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeSection, setActiveSection] = useState("inicio");
   const scrollToSection = useScrollToSection();
 
   useEffect(() => {
@@ -24,6 +25,32 @@ export function MultSystemHeader() {
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Intersection Observer para seção ativa
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -70% 0px",
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    NAVIGATION_ITEMS.forEach((item) => {
+      const element = document.getElementById(item.id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const handleNavigationClick = (sectionId: string) => {
@@ -42,6 +69,11 @@ export function MultSystemHeader() {
 
   return (
     <>
+      {/* Skip Navigation Link - Acessibilidade */}
+      <a href="#main-content" className="skip-link">
+        Pular para conteúdo principal
+      </a>
+
       {/* Main Header */}
       <header
         className={`sticky top-0 z-50 transition-all duration-500 ${
@@ -70,11 +102,16 @@ export function MultSystemHeader() {
                 <button
                   key={item.id}
                   onClick={() => handleNavigationClick(item.id)}
-                  className="text-[#1C1C1E] hover:text-[#0A84FF] transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-[#0A84FF]/5"
+                  className={`text-[#1C1C1E] hover:text-[#0A84FF] transition-all duration-300 relative group px-4 py-2 rounded-lg hover:bg-[#0A84FF]/5 ${
+                    activeSection === item.id ? "text-[#0A84FF] bg-[#0A84FF]/10" : ""
+                  }`}
                   aria-label={`Navegar para ${item.label}`}
+                  aria-current={activeSection === item.id ? "page" : undefined}
                 >
                   <span className="relative z-10">{item.label}</span>
-                  <span className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-[#0A84FF] to-[#4FC3F7] w-0 group-hover:w-3/4 transition-all duration-300 rounded-full"></span>
+                  <span className={`absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-[#0A84FF] to-[#4FC3F7] rounded-full transition-all duration-300 ${
+                    activeSection === item.id ? "w-3/4" : "w-0 group-hover:w-3/4"
+                  }`}></span>
                 </button>
               ))}
             </nav>
@@ -125,9 +162,12 @@ export function MultSystemHeader() {
                 <button
                   key={item.id}
                   onClick={() => handleNavigationClick(item.id)}
-                  className="text-[#1C1C1E] hover:text-[#0A84FF] transition-all duration-200 text-left py-3 px-4 hover:bg-gradient-to-r hover:from-[#0A84FF]/5 hover:to-transparent rounded-xl border border-transparent hover:border-[#0A84FF]/20 hover:shadow-md hover:translate-x-1"
+                  className={`text-[#1C1C1E] hover:text-[#0A84FF] transition-all duration-200 text-left py-3 px-4 hover:bg-gradient-to-r hover:from-[#0A84FF]/5 hover:to-transparent rounded-xl border hover:border-[#0A84FF]/20 hover:shadow-md hover:translate-x-1 ${
+                    activeSection === item.id ? "text-[#0A84FF] bg-[#0A84FF]/10 border-[#0A84FF]/30" : "border-transparent"
+                  }`}
                   style={{ animationDelay: `${index * 50}ms` }}
                   aria-label={`Navegar para ${item.label}`}
+                  aria-current={activeSection === item.id ? "page" : undefined}
                 >
                   {item.label}
                 </button>
